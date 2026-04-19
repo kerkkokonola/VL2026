@@ -371,5 +371,37 @@
       {"min": 51, "out": "Mastokangas", "in": "Vesterbacka"}
     ],
     "notes": "HJK hallitsi ottelua täysin alusta loppuun. xG 3.38–0.90 kertoo selvästä ylivoimasta, ja tulos 3–0 oli ansaittu — maalit syntyivät selkeistä tilanteista, ei sattumalta.\n\nAvausmaali 36. minuutilla: Lingmanin kulmapotku, Ezeh ohjasi päällä maaliin lähialueelta. HJK:n 4-3-3 pyöri sujuvasti; Ring toimi pelinrakentajana, Lingman ja Mentu syöttelivät sivuilta. SJK:n hyökkääjät Djalo ja Streng jäivät koko ensimmäisen puoliajan ilman maalintekotilanteita — HJK:n Bogicevic–Tikkanen-parivaljakko piti linjan tiiviinä.\n\nPukki iski heti toisen puoliajan alussa (49'): Ringin matala syöttö sisään, Pukki viimeisteli yhdellä kosketuksella — 2–0. Käytännössä ratkaisu. SJK teki kolmoisvaihdon perään (n. 51'): Arsalo, Streng ja Mastokangas ulos, Paananen, Rangel ja Vesterbacka sisään. Muutos ei tuonut parannusta — SJK:n 0.90 xG kertoo, että paikkoja syntyi jonkin verran toisella puoliajalla, mutta ne olivat hajanaisia eikä Markovic joutunut todelliseen koetukseen.\n\nHJK vaihtoi 66. minuutilla: Pukki ulos, 18-vuotias Toivo Mero sisään liigadebyyttiin. Mero hyödynsi tilaisuutensa: kaukolaukaus 81. minuutilla löysi maalin, 3–0.\n\nErikoinen taustatekijä: Bolt Arenan fanikatsomoalue oli tyhjänä seuraamusrangaistuksen takia. Pelaajien keskinäinen kommunikointi kuului TV-lähetyksessä poikkeuksellisen selvästi.\n\n**Vedonlyönnillinen huomio:** HJK:n 3.38 xG on erittäin korkea luku — vahvistaa joukkueen aseman liigan ykkössuosikkina. Ezeh laidalla ja Pukki kärjessä ovat jo avausottelun perusteella terävässä vireessä. SJK:n 0.90 xG syntyi lähinnä toisella puoliajalla tilanteen ollessa jo selvä, joten lukua ei pidä yliarvostaa. SJK:n voimaluvut (att 1.069, def 1.008) näyttävät tämän perusteella jopa hieman yläkanttiin — puolustus antoi HJK:lle selvästi liikaa tilaa."
+  },
+  "2082_649_2026-04-18": {
+    "xg_home": 0.29,
+    "xg_away": 0.77,
+    "lineup_home": {
+      "formation": "5-4-1",
+      "gk": ["Bjurström"],
+      "def": ["Ramilson", "Obileye", "Gnanou", "S. Eremenko", "R. Eremenko"],
+      "mid": ["Arko-Mensah", "Marcelo", "Europaeus", "Akinyemi"],
+      "fwd": ["Perez"]
+    },
+    "lineup_away": {
+      "formation": "4-2-3-1",
+      "gk": ["Markovic"],
+      "def": ["Bogicevic", "Tikkanen", "Cicale", "Montano"],
+      "mid": ["Lingman", "Mentu"],
+      "fwd": ["Ylitolva", "Ezeh", "Kirilov", "Pukki"]
+    },
+    "subs_home": [
+      {"min": 59, "out": "Bjurström", "in": "Ylatupa"},
+      {"min": 59, "out": "S. Eremenko", "in": "Jouhi"},
+      {"min": 59, "out": "Akinyemi", "in": "Hannula"},
+      {"min": 75, "out": "Perez", "in": "Latonen"},
+      {"min": 87, "out": "R. Eremenko", "in": "Hänninen"}
+    ],
+    "subs_away": [
+      {"min": 61, "out": "Pukki", "in": "Borchers"},
+      {"min": 61, "out": "Cicale", "in": "Mero"},
+      {"min": 72, "out": "Kirilov", "in": "Kallinen"},
+      {"min": 83, "out": "Ylitolva", "in": "Simojoki"},
+      {"min": 83, "out": "Ezeh", "in": "Moller"}
+    ]
   }
 }

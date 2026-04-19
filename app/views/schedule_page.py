@@ -3,6 +3,9 @@ Schedule page: shows all 2026 fixtures grouped by round.
 Clicking a match navigates to match analysis with teams pre-filled.
 """
 
+import json
+from pathlib import Path
+
 import streamlit as st
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
@@ -11,11 +14,23 @@ from api.football_api import get_fixtures
 from config import VEIKKAUSLIIGA_ID, SEASON_2026
 
 
+_MANUAL_RESULTS_PATH = Path(__file__).parent.parent.parent / "data" / "manual_results.json"
+
+
+def _load_manual_results() -> dict:
+    if _MANUAL_RESULTS_PATH.exists():
+        with open(_MANUAL_RESULTS_PATH, encoding="utf-8") as f:
+            return {int(k): v for k, v in json.load(f).items()}
+    return {}
+
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def _load_fixtures(force_refresh: bool = False):
     fixtures = get_fixtures(VEIKKAUSLIIGA_ID, SEASON_2026, force_refresh=force_refresh)
+    manual = _load_manual_results()
     rounds = {}
     for f in fixtures:
+        fixture_id = f["fixture"]["id"]
         status = f["fixture"]["status"]["short"]
         round_name = f["league"]["round"]
         date = f["fixture"]["date"][:10]
@@ -26,10 +41,14 @@ def _load_fixtures(force_refresh: bool = False):
         goals_home = f["goals"]["home"]
         goals_away = f["goals"]["away"]
 
+        if goals_home is None and fixture_id in manual:
+            goals_home = manual[fixture_id]["home_goals"]
+            goals_away = manual[fixture_id]["away_goals"]
+
         if round_name not in rounds:
             rounds[round_name] = []
         rounds[round_name].append({
-            "fixture_id": f["fixture"]["id"],
+            "fixture_id": fixture_id,
             "date": date,
             "home": home,
             "away": away,
@@ -66,8 +85,7 @@ def render():
 
     # Active round = first round with unplayed matches; fallback to last round
     _active_round = next(
-        (r for r in sorted_rounds if any(m["status"] == "NS" or m["goals_home"] is None
-                                         for m in rounds[r])),
+        (r for r in sorted_rounds if any(m["goals_home"] is None for m in rounds[r])),
         sorted_rounds[-1] if sorted_rounds else None,
     )
 
@@ -77,7 +95,7 @@ def render():
 
     for round_name in sorted_rounds:
         matches = rounds[round_name]
-        has_unplayed = any(m["status"] == "NS" for m in matches)
+        has_unplayed = any(m["goals_home"] is None for m in matches)
 
         if not show_played and not has_unplayed:
             continue
@@ -88,20 +106,20 @@ def render():
 
         with st.expander(f"**Kierros {round_num}** — {date_str}", expanded=(round_name == _active_round)):
             for m in sorted(matches, key=lambda x: x["date"]):
-                if not show_played and m["status"] != "NS":
+                if not show_played and m["goals_home"] is not None:
                     continue
 
-                col_date, col_match, col_analysoi, col_raportti = st.columns([1.2, 3, 1, 1.2])
+                col_date, col_match, col_analysoi = st.columns([1.2, 3, 1])
 
                 with col_date:
                     st.caption(m["date"])
 
                 with col_match:
-                    if m["status"] == "NS":
-                        st.write(f"**{m['home']}** vs **{m['away']}**")
-                    else:
+                    if m["goals_home"] is not None and m["goals_away"] is not None:
                         score = f"{m['goals_home']}–{m['goals_away']}"
                         st.write(f"{m['home']} **{score}** {m['away']}")
+                    else:
+                        st.write(f"**{m['home']}** vs **{m['away']}**")
 
                 with col_analysoi:
                     if st.button("Analysoi →", key=f"match_{m['home']}_{m['away']}_{m['date']}"):
@@ -109,13 +127,3 @@ def render():
                         st.session_state["match_away"] = m["away"]
                         st.session_state["page"] = "Matsianalyysi"
                         st.rerun()
-
-                with col_raportti:
-                    played = m["status"] != "NS" or m["goals_home"] is not None
-                    if played:
-                        if st.button("Raportti →", key=f"report_{m['home']}_{m['away']}_{m['date']}"):
-                            st.session_state["report_fixture"] = m
-                            st.session_state["page"] = "Otteluraportti"
-                            st.rerun()
-                    else:
-                        st.caption("Raportti", help="Saatavilla pelin jälkeen")

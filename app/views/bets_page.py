@@ -23,11 +23,15 @@ def render():
     total_staked = sum(b["stake_units"] for b in settled)
     roi = (total_pl / total_staked * 100) if total_staked else 0.0
 
-    c1, c2, c3, c4 = st.columns(4)
+    clv_vals = [b["clv_percent"] for b in settled if b.get("clv_percent") is not None]
+    avg_clv = sum(clv_vals) / len(clv_vals) if clv_vals else None
+
+    c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Avoimet vedot", len(open_bets))
     c2.metric("Selvitetty", len(settled))
     c3.metric("P/L (u)", f"{total_pl:+.2f}" if settled else "—")
-    c4.metric("ROI", f"{roi:.1f} %" if settled else "—")
+    c4.metric("ROI", f"{roi:+.1f} %" if settled else "—")
+    c5.metric("CLV ka.", f"{avg_clv:+.2f} %" if avg_clv is not None else "—")
 
     st.divider()
 
@@ -81,8 +85,8 @@ def render():
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("Kerroin", f"{b['odds']:.3f}")
             c2.metric("Malli", f"{b['model_prob']*100:.1f} %")
-            edge = b["model_prob"] - (1 / b["odds"])
-            c3.metric("Edge", f"{edge*100:+.1f} pp")
+            ev = b["model_prob"] * b["odds"] - 1
+            c3.metric("EV", f"{ev*100:+.1f} %")
             c4.metric("Panos", f"{b['stake_units']} u")
 
             if b.get("closing_odds") or b.get("closing_no_vig_prob"):
